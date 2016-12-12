@@ -11,7 +11,7 @@ const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
-const config = Object.assign({}, require('./webpack.common'), {
+const config = {
 
     entry: [
         path.join(__dirname, '../example/index.js')
@@ -80,7 +80,7 @@ const config = Object.assign({}, require('./webpack.common'), {
         new webpack.IgnorePlugin(/locale/, /moment/)
     ]
 
-});
+};
 
 
 module.exports = config;

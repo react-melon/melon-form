@@ -1,2 +1,5 @@
 {
+    "shallow-equal": [
+        "shallow-equal/objects"
+    ]
 }
