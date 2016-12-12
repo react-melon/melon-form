@@ -24,10 +24,6 @@ const config = {
         'shallow-equal/objects': true
     },
 
-    // resolve: {
-    //     extensions: ['', '.js']
-    // },
-
     output: {
         path: 'lib',
         library: 'melon-form',

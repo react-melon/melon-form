@@ -1,36 +1,40 @@
 {
-  "name": "melon",
-  "version": "1.0.0-alpha.1",
-  "homepage": "http://react-melon.github.io/melon",
-  "authors": [
-    "ludafa@outlook.com"
-  ],
-  "description": "react ui components",
-  "main": "src",
-  "moduleType": [
-    "amd"
-  ],
-  "keywords": [
-    "react",
-    "ui"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "dep",
-    "test",
-    "tests",
-    "src",
-    "doc",
-    "example",
-    "asset"
-  ],
-  "dependencies": {
-    "melon-core": "^0.3.2",
-    "react": "^0.14.8",
-    "react-dom": "0.14.8",
-    "react-motion": "^0.4.2"
-  }
+    "name": "melon",
+    "version": "1.0.0-alpha.2",
+    "homepage": "http://react-melon.github.io/melon",
+    "authors": [
+        "ludafa@outlook.com"
+    ],
+    "description": "react ui components",
+    "main": "lib/index.js",
+    "moduleType": [
+        "amd"
+    ],
+    "keywords": [
+        "react",
+        "ui"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "dep",
+        "test",
+        "tests",
+        "src",
+        "doc",
+        "example",
+        "asset",
+        "_book",
+        ".Archive",
+        "books"
+    ],
+    "dependencies": {
+        "lodash": "^4.17.2",
+        "react": "^0.14.8||^15.4.0",
+        "react-addons-update": "^15.4.1",
+        "redux-thunk": "^2.1.0",
+        "shallow-equal": "^1.0.0"
+    }
 }

@@ -10,3 +10,6 @@ coverage
 *.orig
 .bower.json
 asset
+_book
+.Archive
+docs
