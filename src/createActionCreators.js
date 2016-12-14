@@ -293,6 +293,20 @@ export default function createActionCreators(options) {
             };
         }
 
+        function startPending(name) {
+            return {
+                type: types.PENDING_START,
+                payload: name
+            };
+        }
+
+        function stopPending(name) {
+            return {
+                type: types.PENDING_STOP,
+                payload: name
+            };
+        }
+
         return {
 
             // form
@@ -311,6 +325,8 @@ export default function createActionCreators(options) {
             change,
             blur,
             touch,
+            startPending,
+            stopPending,
 
             // array field
             arrayPush,

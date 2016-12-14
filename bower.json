@@ -24,11 +24,12 @@
         "tests",
         "src",
         "doc",
-        "example",
         "asset",
         "_book",
         ".Archive",
-        "books"
+        "books",
+        "example",
+        "tools"
     ],
     "dependencies": {
         "lodash": "^4.17.2",

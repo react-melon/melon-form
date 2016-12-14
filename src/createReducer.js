@@ -22,7 +22,9 @@ import {
     UNREGISTER,
     ASYNC_VALIDATE_START,
     ASYNC_VALIDATE_SUCCEED,
-    ASYNC_VALIDATE_FAILED
+    ASYNC_VALIDATE_FAILED,
+    PENDING_START,
+    PENDING_STOP
 } from './actionTypes';
 
 import update from 'react-addons-update';
@@ -367,10 +369,6 @@ export default function createReducer(options = {}) {
 
     function updateValidity(state, validity) {
 
-        if (!validity) {
-            return state;
-        }
-
         return update(state, {
             meta: {
                 $apply(meta) {
@@ -380,7 +378,7 @@ export default function createReducer(options = {}) {
 
                             nextMeta[key] = {
                                 ...meta[key],
-                                error: validity[key] || ''
+                                error: validity && validity[key] || ''
                             };
 
                             return nextMeta;
@@ -523,6 +521,26 @@ export default function createReducer(options = {}) {
 
     }
 
+    function startPending(state, name) {
+        return update(state, {
+            meta: {
+                [name]: {
+                    $merge: {pending: true}
+                }
+            }
+        });
+    }
+
+    function stopPending(state, name) {
+        return update(state, {
+            meta: {
+                [name]: {
+                    $merge: {pending: false}
+                }
+            }
+        });
+    }
+
     const MAP = {
         [FOCUS]: focus,
         [CHANGE]: change,
@@ -542,7 +560,9 @@ export default function createReducer(options = {}) {
         [ASYNC_VALIDATE_SUCCEED]: setValidateSucceed,
         [ASYNC_VALIDATE_FAILED]: setValidateFailed,
         [REGISTER]: register,
-        [UNREGISTER]: unregister
+        [UNREGISTER]: unregister,
+        [PENDING_START]: startPending,
+        [PENDING_STOP]: stopPending
     };
 
     function getInitialState(model, initialValue) {

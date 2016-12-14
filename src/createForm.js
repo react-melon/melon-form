@@ -5,45 +5,28 @@
 
 import React, {Component, PropTypes} from 'react';
 import createActionCreators from './createActionCreators';
-import {bindActionCreators} from './util/bindActionCreators';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 export default function (options) {
 
     let {
-        connect,
         model,
-        getActions = createActionCreators
+        validate,
+        getActions
     } = options;
+
+    let getEmbedActions = createActionCreators({model, validate});
 
     return Form => {
 
         class MelonForm extends Component {
 
-            constructor(...args) {
-                super(...args);
-                this.attach = this.attach.bind(this);
-                this.detach = this.detach.bind(this);
-                this.fields = [];
-            }
-
-            componentDidMount() {
-                this.props.actions.validate();
-            }
-
             getChildContext() {
                 return {
-                    attach: this.attach,
-                    detach: this.detach,
-                    actions: this.props.actions
+                    actions: this.props.actions,
+                    model
                 };
-            }
-
-            attach(field) {
-                this.fields.push(field);
-            }
-
-            detach(field) {
-                this.fields = this.fields.filter(f => f === field);
             }
 
             render() {
@@ -57,17 +40,12 @@ export default function (options) {
         MelonForm.propTypes = {
             value: PropTypes.any,
             meta: PropTypes.object.isRequired,
-            validity: PropTypes.arrayOf(PropTypes.shape({
-                valid: PropTypes.bool.isRequired,
-                message: PropTypes.string
-            })),
             actions: PropTypes.object.isRequired
         };
 
         MelonForm.childContextTypes = {
-            attach: PropTypes.func.isRequired,
-            detach: PropTypes.func.isRequired,
-            actions: PropTypes.object.isRequired
+            actions: PropTypes.object.isRequired,
+            model: PropTypes.string.isRequired
         };
 
         function mapStateToProps(state, props) {
@@ -75,11 +53,21 @@ export default function (options) {
         }
 
         function mapDispatchToProps(dispatch, props) {
+
+            let embedActions = getEmbedActions(props);
+
+            let customActions = typeof getActions === 'function'
+                ? getActions(props, embedActions)
+                : null;
+
+            let actions = {
+                ...embedActions,
+                ...customActions
+            };
+
             return {
-                actions: bindActionCreators(
-                    dispatch,
-                    getActions(props)
-                )
+                dispatch,
+                actions: bindActionCreators(actions, dispatch)
             };
         }
 

@@ -12,6 +12,7 @@ import * as actionTypes from './actionTypes';
 import * as selectors from './selectors';
 export * from './util/validity';
 
+export const Field = createField();
 
 export {
     createActionCreators,

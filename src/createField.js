@@ -4,6 +4,7 @@
  */
 
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
 import {getFieldData} from './selectors';
 import shallowEqual from 'shallow-equal/objects';
 import createOnChange from './util/createOnChange';
@@ -40,115 +41,109 @@ DefaultField.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-export default function createField(options = {}) {
+export default function createField(Field = DefaultField) {
 
-    const {
-        model,
-        connect
-    } = options;
+    function mapStateToProps(state, props) {
 
-    return (Field = DefaultField) => {
+        const {model, name, format} = props;
 
-        function mapStateToProps(state, props) {
+        const data = getFieldData(state[model], name);
 
-            const data = getFieldData(state[model], props.name);
+        const formattedValue = format(data.value, props);
 
-            const formattedValue = props.format(data.value);
+        return formattedValue === data.value
+            ? data
+            : {...data, value: formattedValue};
+    }
 
-            return formattedValue === data.value
-                ? data
-                : {...data, value: formattedValue};
+    function mapDispatchToProps(dispatch, props) {
+
+        const {
+            parse,
+            normalize,
+            actions
+        } = props;
+
+        const change = createOnChange(actions.change, {parse, normalize});
+
+        return {
+            actions: {
+                ...actions,
+                change,
+                dispatch
+            }
+        };
+    }
+
+    const ConnectedField = connect(mapStateToProps, mapDispatchToProps)(Field);
+
+    /**
+     * FormField
+     *
+     * @class
+     * @param {*} props   属性
+     * @param {Object} context 上下文
+     */
+    class FormField extends Component {
+
+        shouldComponentUpdate(nextProps) {
+            return !shallowEqual(nextProps, this.props);
         }
 
-        function mapDispatchToProps(dispatch, props) {
+        componentWillMount() {
+            this.context.actions.register(this.props.name);
+        }
+
+        componentWillUnmount() {
+            this.context.actions.unregister(this.props.name);
+        }
+
+        componentWillReceiveProps(nextProps) {
+            if (this.props.name !== nextProps.name) {
+                const actions = this.context.actions;
+                actions.unregister(name);
+                actions.register(name);
+            }
+        }
+
+        render() {
 
             const {
-                parse,
-                normalize,
+                model,
                 actions
-            } = props;
+            } = this.context;
 
-            const change = createOnChange(actions.change, {parse, normalize});
-
-            return {
-                actions: {
-                    ...actions,
-                    change,
-                    dispatch
-                }
-            };
+            return (
+                <ConnectedField
+                    {...this.props}
+                    actions={actions}
+                    model={model} />
+            );
         }
 
-        let ConnectedField = connect(
-            mapStateToProps,
-            mapDispatchToProps
-        )(Field);
+    }
 
-        /**
-         * FormField
-         *
-         * @class
-         * @param {*} props   属性
-         * @param {Object} context 上下文
-         */
-        class FormField extends Component {
-
-            shouldComponentUpdate(nextProps) {
-                const should = !shallowEqual(nextProps, this.props);
-                if (should) {
-                    console.log('will update: %o %o', this.props, nextProps);
-                }
-                return should;
-            }
-
-            componentWillMount() {
-                this.context.actions.register(this.props.name);
-            }
-
-            componentWillUnmount() {
-                this.context.actions.unregister(this.props.name);
-            }
-
-            componentWillReceiveProps(nextProps) {
-                if (this.props.name !== nextProps.name) {
-                    const actions = this.context.actions;
-                    actions.unregister(name);
-                    actions.register(name);
-                }
-            }
-
-            render() {
-                return (
-                    <ConnectedField
-                        {...this.props}
-                        actions={this.context.actions} />
-                );
-            }
-
-        }
-
-        FormField.contextTypes = {
-            actions: PropTypes.object.isRequired
-        };
-
-        FormField.propTypes = {
-            name: PropTypes.string.isRequired,
-            control: PropTypes.func.isRequired,
-            format: PropTypes.func,
-            parse: PropTypes.func,
-            normalize: PropTypes.func
-        };
-
-        FormField.defaultProps = {
-            format(value) {
-                return value == null ? '' : value;
-            }
-        };
-
-        FormField.displayName = `FormField(${Field.displayName || Field.name})`;
-
-        return FormField;
-
+    FormField.contextTypes = {
+        actions: PropTypes.object.isRequired,
+        model: PropTypes.string.isRequired
     };
+
+    FormField.propTypes = {
+        name: PropTypes.string.isRequired,
+        control: PropTypes.func.isRequired,
+        format: PropTypes.func,
+        parse: PropTypes.func,
+        normalize: PropTypes.func
+    };
+
+    FormField.defaultProps = {
+        format(value) {
+            return value == null ? '' : value;
+        }
+    };
+
+    FormField.displayName = `FormField(${Field.displayName || Field.name})`;
+
+    return FormField;
 
 }

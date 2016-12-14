@@ -47,6 +47,8 @@ const config = {
         ]
     },
 
+    devtool: 'source-map',
+
     plugins: [
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),

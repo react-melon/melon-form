@@ -21,7 +21,7 @@ export function isValid(validity) {
 export function resolveAsyncTasks(validity) {
 
     // 不是 object 或者已是 promise 的不处理
-    if (typeof validity !== 'object') {
+    if (validity == null || typeof validity !== 'object') {
         return [];
     }
 
