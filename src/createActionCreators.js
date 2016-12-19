@@ -7,33 +7,41 @@ import * as types from './actionTypes';
 import {isValid, resolveAsyncTasks} from './util/validity';
 import * as selectors from './selectors';
 
+function createEventMeta(name, type) {
+
+    return {
+        event: {
+            handler: type,
+            getEvent(state) {
+                return {
+                    name,
+                    value: state.value
+                };
+            }
+        }
+    };
+
+}
+
 export default function createActionCreators(options) {
+
+    let model = options.model;
+
+    let memoizedActions;
+    let memoizedProps;
 
     return props => {
 
-        function createEventMeta(name, type) {
-
-            return {
-                event: {
-                    handler: type,
-                    getEvent(state) {
-                        return {
-                            name,
-                            value: state.value
-                        };
-                    }
-                }
-            };
-
+        if (memoizedActions && props === memoizedProps) {
+            return memoizedActions;
         }
 
-        function initialize(value, schema, validator) {
+        function initialize(value) {
             return {
                 type: types.INITIALIZE,
                 payload: {
                     value,
-                    schema,
-                    validator
+                    model
                 }
             };
         }
@@ -41,7 +49,7 @@ export default function createActionCreators(options) {
         function updateValidity(validity) {
             return {
                 type: types.VALIDITY_UPDATE,
-                payload: validity
+                payload: {validity, model}
             };
         }
 
@@ -49,10 +57,7 @@ export default function createActionCreators(options) {
 
             return (dispatch, getState) => {
 
-                const {
-                    model,
-                    validate
-                } = options;
+                let validate = options.validate;
 
                 if (props.noValidate || !validate) {
                     return;
@@ -85,7 +90,7 @@ export default function createActionCreators(options) {
 
                         dispatch({
                             type: types.ASYNC_VALIDATE_START,
-                            payload: name
+                            payload: {name, model}
                         });
 
                         return task.then(
@@ -93,7 +98,8 @@ export default function createActionCreators(options) {
                                 dispatch({
                                     type: types.ASYNC_VALIDATE_SUCCEED,
                                     payload: {
-                                        name
+                                        name,
+                                        model
                                     }
                                 });
                             },
@@ -102,7 +108,8 @@ export default function createActionCreators(options) {
                                     type: types.ASYNC_VALIDATE_FAILED,
                                     payload: {
                                         name,
-                                        error
+                                        error,
+                                        model
                                     }
                                 });
                             }
@@ -138,7 +145,8 @@ export default function createActionCreators(options) {
 
         function touchAll() {
             return {
-                type: types.TOUCH_ALL
+                type: types.TOUCH_ALL,
+                payload: {model}
             };
         }
 
@@ -146,7 +154,7 @@ export default function createActionCreators(options) {
 
             return (dispatch, getState) => {
 
-                let state = getState()[options.model];
+                let state = getState()[model];
 
                 function onValidateFinish(validity) {
 
@@ -170,14 +178,15 @@ export default function createActionCreators(options) {
 
         function reset() {
             return {
-                type: types.RESET
+                type: types.RESET,
+                payload: {model}
             };
         }
 
         function focus(name) {
             return {
                 type: types.FOCUS,
-                payload: name
+                payload: {name, model}
             };
         }
 
@@ -186,7 +195,8 @@ export default function createActionCreators(options) {
                 type: types.CHANGE,
                 payload: {
                     name,
-                    value
+                    value,
+                    model
                 },
                 meta: createEventMeta(name, 'onFieldChange')
             };
@@ -198,7 +208,7 @@ export default function createActionCreators(options) {
 
                 dispatch({
                     type: types.BLUR,
-                    payload: name
+                    payload: {name, model}
                 });
 
                 return dispatch(validate(name));
@@ -210,25 +220,20 @@ export default function createActionCreators(options) {
         function touch(name) {
             return {
                 type: types.TOUCH,
-                payload: name
+                payload: {name, model}
             };
         }
 
         function arrayPush(name, ...elements) {
 
-            return dispatch => {
-
-                dispatch({
-                    type: types.ARRAY_PUSH,
-                    payload: {
-                        name,
-                        elements
-                    },
-                    meta: createEventMeta(name, 'onFieldChange')
-                });
-
-                dispatch(validate(name));
-
+            return {
+                type: types.ARRAY_PUSH,
+                payload: {
+                    name,
+                    elements,
+                    model
+                },
+                meta: createEventMeta(name, 'onFieldChange')
             };
 
         }
@@ -240,41 +245,31 @@ export default function createActionCreators(options) {
             ...replacements
         ) {
 
-            return dispatch => {
-
-                dispatch({
-                    type: types.ARRAY_SPLICE,
-                    payload: {
-                        name,
-                        start,
-                        deleteCount,
-                        replacements
-                    },
-                    meta: createEventMeta(name, 'onFieldChange')
-                });
-
-                dispatch(validate(name));
-
+            return {
+                type: types.ARRAY_SPLICE,
+                payload: {
+                    name,
+                    start,
+                    deleteCount,
+                    replacements,
+                    model
+                },
+                meta: createEventMeta(name, 'onFieldChange')
             };
 
         }
 
         function arraySwap(name, from, to) {
 
-            return dispatch => {
-
-                dispatch({
-                    type: types.ARRAY_SWAP,
-                    payload: {
-                        from,
-                        to,
-                        name
-                    },
-                    meta: createEventMeta(name, 'onFieldChange')
-                });
-
-                dispatch(validate(name));
-
+            return {
+                type: types.ARRAY_SWAP,
+                payload: {
+                    from,
+                    to,
+                    name,
+                    model
+                },
+                meta: createEventMeta(name, 'onFieldChange')
             };
 
         }
@@ -282,32 +277,32 @@ export default function createActionCreators(options) {
         function register(name) {
             return {
                 type: types.REGISTER,
-                payload: name
+                payload: {name, model}
             };
         }
 
         function unregister(name) {
             return {
                 type: types.UNREGISTER,
-                payload: name
+                payload: {name, model}
             };
         }
 
         function startPending(name) {
             return {
                 type: types.PENDING_START,
-                payload: name
+                payload: {name, model}
             };
         }
 
         function stopPending(name) {
             return {
                 type: types.PENDING_STOP,
-                payload: name
+                payload: {name, model}
             };
         }
 
-        return {
+        memoizedActions = {
 
             // form
             initialize,
@@ -333,6 +328,8 @@ export default function createActionCreators(options) {
             arraySplice,
             arraySwap
         };
+
+        return memoizedActions;
 
     };
 

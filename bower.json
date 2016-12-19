@@ -1,14 +1,14 @@
 {
     "name": "melon",
-    "version": "1.0.0-alpha.3",
-    "homepage": "http://react-melon.github.io/melon",
+    "version": "1.0.0-alpha.4",
+    "homepage": "http://react-melon.github.io/melon-form",
     "authors": [
         "ludafa@outlook.com"
     ],
     "description": "react ui components",
     "main": "lib/index.js",
     "moduleType": [
-        "amd"
+        "umd"
     ],
     "keywords": [
         "react",

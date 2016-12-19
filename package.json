@@ -1,6 +1,6 @@
 {
     "name": "melon-form",
-    "version": "1.0.0-alpha.3",
+    "version": "1.0.0-alpha.4",
     "description": "React Form",
     "main": "./lib/index.js",
     "scripts": {
@@ -136,16 +136,7 @@
                 ],
                 "plugins": [
                     "transform-es3-property-literals",
-                    "transform-es3-member-expression-literals",
-                    [
-                        "transform-runtime",
-                        {
-                            "helpers": true,
-                            "polyfill": false,
-                            "regenerator": false,
-                            "moduleName": "babel-runtime"
-                        }
-                    ]
+                    "transform-es3-member-expression-literals"
                 ]
             }
         }

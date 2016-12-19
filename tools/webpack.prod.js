@@ -1,9 +1,8 @@
 /**
  * @file webpack 构建配置
- * @author chenxiao07 <chenxiao07@baidu.com>
+ * @author cxtom <cxtom@163.com>
+ * @author ludafa <ludafa@outlook.com
  */
-
-'use strict';
 
 const webpack = require('webpack');
 
@@ -13,16 +12,9 @@ const config = {
         main: ['./src/index.js']
     },
 
-    externals: {
-        'lodash/mapValues': true,
-        'lodash/get': true,
-        'lodash/toPath': true,
-        'lodash/startWith': true,
-        'react': true,
-        'react-addons-update': true,
-        'redux-thunk': true,
-        'shallow-equal/objects': true
-    },
+    externals: [
+        /^[^.]/
+    ],
 
     output: {
         path: 'lib',

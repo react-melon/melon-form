@@ -6,7 +6,7 @@
 export function isValid(validity) {
 
     if (validity == null) {
-        return null;
+        return true;
     }
 
     return Object
