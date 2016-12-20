@@ -5,8 +5,9 @@
 
 import createActionCreators from './createActionCreators';
 import createReducer from './createReducer';
-import createForm from './createForm';
 import createField from './createField';
+
+import Form from './Form';
 
 import * as actionTypes from './actionTypes';
 import * as selectors from './selectors';
@@ -21,7 +22,7 @@ export {
     actionTypes,
     selectors,
     createReducer,
-    createForm,
+    Form,
     createField,
     dataPath,
     reducers
