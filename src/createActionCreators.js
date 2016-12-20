@@ -23,9 +23,7 @@ function createEventMeta(name, type) {
 
 }
 
-export default function createActionCreators(options) {
-
-    let model = options.model;
+export default (() => {
 
     let memoizedActions;
     let memoizedProps;
@@ -35,6 +33,8 @@ export default function createActionCreators(options) {
         if (memoizedActions && props === memoizedProps) {
             return memoizedActions;
         }
+
+        let model = props.model;
 
         function initialize(value) {
             return {
@@ -57,7 +57,7 @@ export default function createActionCreators(options) {
 
             return (dispatch, getState) => {
 
-                let validate = options.validate;
+                let validate = props.validate;
 
                 if (props.noValidate || !validate) {
                     return;
@@ -333,4 +333,5 @@ export default function createActionCreators(options) {
 
     };
 
-}
+
+})();
