@@ -5,7 +5,7 @@
     "main": "./lib/index.js",
     "scripts": {
         "start": "NODE_ENV=dev node tools/server.js",
-        "build": "rimraf lib && NODE_ENV=production webpack --config tools/webpack.prod.js",
+        "build": "rimraf lib && NODE_ENV=production gulp",
         "lint": "fecs src",
         "docs": "esdoc -c esdoc.json",
         "setup": "rimraf asset && NODE_ENV=production webpack --config=tools/webpack.dll.js",
@@ -46,7 +46,6 @@
         "gulp": "^3.9.1",
         "gulp-babel": "^6.1.2",
         "gulp-babel-external-helpers": "^2.0.2",
-        "gulp-clean": "^0.3.2",
         "gulp-sourcemaps": "^1.6.0",
         "html-webpack-harddisk-plugin": "0.0.2",
         "html-webpack-plugin": "^2.22.0",
