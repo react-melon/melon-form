@@ -7,6 +7,7 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import createActionCreators from './createActionCreators';
 import {Provider, connect} from 'react-redux';
+import {getIn} from './util/dataPath';
 
 export default class Form extends Component {
 
@@ -39,7 +40,8 @@ export default class Form extends Component {
     }
 
     mapStateToProps(state, props) {
-        return state[props.model];
+        let model = props.model;
+        return model ? getIn(state, props.model) : state;
     }
 
     mapDispatchToProps(dispatch, props) {
