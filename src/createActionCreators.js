@@ -66,7 +66,7 @@ export default (() => {
                 let store = getState();
 
                 let validity = validate(
-                    model ? store[model] : store,
+                    selectors.getModel(store, model),
                     props,
                     origin
                 );
@@ -154,12 +154,12 @@ export default (() => {
 
             return (dispatch, getState) => {
 
-                let state = getState()[model];
+                let state = getState();
 
                 function onValidateFinish(validity) {
 
                     if (isValid(validity)) {
-                        callback && callback(selectors.getFormData(state));
+                        callback && callback(selectors.getValue(state, model));
                     }
 
                 }

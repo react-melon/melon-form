@@ -116,6 +116,7 @@ export function updateValidity(state, action) {
 }
 
 export function register(state, action) {
+
     return update(state, {
         meta: {
             [action.payload.name]: {
@@ -123,6 +124,7 @@ export function register(state, action) {
             }
         }
     });
+
 }
 
 export function unregister(state, action) {

@@ -5,18 +5,22 @@
 
 import {getIn} from './util/dataPath';
 
-export function getFormData(store) {
-    return store.value;
+export function getModel(state, model) {
+    return getIn(state, model);
 }
 
-export function getMeta(store) {
-    return store.meta;
+export function getValue(store, model) {
+    return getModel(store, model).value;
 }
 
-export function getFieldData(store, name) {
+export function getMeta(store, model) {
+    return getModel(store, model).meta;
+}
 
-    const formData = getFormData(store);
-    const meta = getMeta(store);
+export function getFieldData(store, model, name) {
+
+    const formData = getValue(store, model);
+    const meta = getMeta(store, model);
 
     const data = {
         value: getIn(formData, name),

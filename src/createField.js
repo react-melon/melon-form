@@ -47,7 +47,7 @@ export default function createField(Field = DefaultField) {
 
         const {model, name, format} = props;
 
-        const data = getFieldData(state[model], name);
+        const data = getFieldData(state, model, name);
 
         const formattedValue = format(data.value, props);
 

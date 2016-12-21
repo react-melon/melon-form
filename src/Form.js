@@ -7,15 +7,20 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import createActionCreators from './createActionCreators';
 import {Provider, connect} from 'react-redux';
-import {getIn} from './util/dataPath';
+import {getModel} from './selectors';
 
 export default class Form extends Component {
 
     constructor(props, context) {
+
         super(props, context);
-        this.actions = this.mapDispatchToProps(context.store.dispatch, props);
+
         this.mapStateToProps = this.mapStateToProps.bind(this);
         this.mapDispatchToProps = this.mapDispatchToProps.bind(this);
+
+        this.control = this.getControl(props.control);
+        this.actions = this.mapDispatchToProps(context.store.dispatch, props);
+
     }
 
     getChildContext() {
@@ -27,21 +32,27 @@ export default class Form extends Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if (
-            this.props !== nextProps
-            && this.props.model !== nextProps.model
-        ) {
+        if (this.props === nextProps) {
+            return;
+        }
+
+        const {model, control} = this.props;
+
+        if (model !== nextProps.model) {
             this.actions = this.mapDispatchToProps(
-                this.conext.store.dispatch,
+                this.context.store.dispatch,
                 nextProps
             );
+        }
+
+        if (control !== nextProps.control) {
+            this.control = this.getControl(nextProps.control);
         }
 
     }
 
     mapStateToProps(state, props) {
-        let model = props.model;
-        return model ? getIn(state, props.model) : state;
+        return getModel(state, props.model);
     }
 
     mapDispatchToProps(dispatch, props) {
@@ -71,23 +82,15 @@ export default class Form extends Component {
     }
 
     getControl(control) {
-
-        if (this.control && this.control.WrappedComponent === control) {
-            return this.control;
-        }
-
-        this.control = connect(this.mapStateToProps, this.mapDispatchToProps)(control);
-
-        return this.control;
-
+        return connect(this.mapStateToProps, this.mapDispatchToProps)(control);
     }
 
     render() {
 
-        let {model, control, ...rest} = this.props;
+        let {model, ...rest} = this.props;
 
         return React.createElement(
-            this.getControl(control),
+            this.control,
             {
                 ...rest,
                 model
