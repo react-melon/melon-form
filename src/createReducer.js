@@ -32,6 +32,10 @@ const MAP = {
 
 export default function createReducer(model, initialValue = {}, customReducers = {}) {
 
+    function getModel(action) {
+        return typeof model === 'function' ? model(action) : model;
+    }
+
     return (state = {value: initialValue, meta: {}}, action) => {
 
         let {type, payload} = action;
@@ -42,7 +46,7 @@ export default function createReducer(model, initialValue = {}, customReducers =
         // 跳过
         if (
             // 不是当前绑定域
-            payload && payload.model !== model
+            payload && payload.model !== getModel(action)
             // 或者无 reducer 绑定
             || (!embedReducer && !customReducer)
         ) {
