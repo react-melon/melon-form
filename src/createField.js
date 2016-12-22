@@ -104,6 +104,7 @@ export default function createField(Field = DefaultField) {
                 return;
             }
 
+            const name = nextProps.name;
             const {unregister, register} = nextContext.actions;
 
             unregister(name);
