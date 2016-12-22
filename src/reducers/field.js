@@ -108,7 +108,7 @@ export function updateValidity(state, action) {
         meta: {
             $apply(meta) {
                 return Object
-                    .keys(validity)
+                    .keys(meta)
                     .reduce((nextMeta, key) => {
 
                         nextMeta[key] = {
@@ -119,7 +119,7 @@ export function updateValidity(state, action) {
 
                         return nextMeta;
 
-                    }, meta);
+                    }, {});
             }
         }
     });
