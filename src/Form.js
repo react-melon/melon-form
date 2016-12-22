@@ -44,10 +44,15 @@ export default class Form extends Component {
         const {model, control} = this.props;
 
         if (model !== nextProps.model) {
+
             this.actions = this.mapDispatchToProps(
                 this.context.store.dispatch,
                 nextProps
             );
+
+            // 在切换 model 时，要做 initialize
+            this.actions.actions.initialize();
+
         }
 
         if (control !== nextProps.control) {
