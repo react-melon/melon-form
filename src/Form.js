@@ -8,6 +8,7 @@ import {bindActionCreators} from 'redux';
 import createActionCreators from './createActionCreators';
 import {Provider, connect} from 'react-redux';
 import {getModel} from './selectors';
+import shallowEqual from 'shallow-equal/objects';
 
 export default class Form extends Component {
 
@@ -37,24 +38,24 @@ export default class Form extends Component {
 
     componentWillReceiveProps(nextProps) {
 
-        if (this.props === nextProps) {
+        if (shallowEqual(this.props, nextProps)) {
             return;
         }
 
+        // 只要属性发生变化，就需要重新生成 actions
+        this.actions = this.mapDispatchToProps(
+            this.context.store.dispatch,
+            nextProps
+        );
+
         const {model, control} = this.props;
 
+        // 在切换 model 时，要做 initialize
         if (model !== nextProps.model) {
-
-            this.actions = this.mapDispatchToProps(
-                this.context.store.dispatch,
-                nextProps
-            );
-
-            // 在切换 model 时，要做 initialize
             this.actions.actions.initialize();
-
         }
 
+        // 切换 control 时要重新 connect 生成组件
         if (control !== nextProps.control) {
             this.control = this.getControl(nextProps.control);
         }
