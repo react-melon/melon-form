@@ -4,6 +4,7 @@
  */
 
 import {getIn} from './util/dataPath';
+import {DEFAULT_META} from './constants';
 
 export function getModel(state, model) {
     return getIn(state, model);
@@ -24,7 +25,7 @@ export function getFieldData(store, model, name) {
 
     const data = {
         value: getIn(formData, name),
-        meta: meta[name]
+        meta: meta[name] || DEFAULT_META
     };
 
     return data;

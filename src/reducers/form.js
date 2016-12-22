@@ -4,30 +4,34 @@
  */
 
 import update from 'react-addons-update';
-import mapValues from 'lodash/mapValues';
-import {make} from '../util/dataPathMap';
-import {DEFAULT_META} from '../constants';
 
-export function initialize(state, action) {
+export function initialize(state = {}, action) {
 
-    let value = action.payload.value;
+    let value = state.value || {};
 
     return update(state, {
         value: {
             $set: value
         },
         meta: {
-            $set: mapValues(
-                make(value),
-                () => DEFAULT_META
-            )
+            $set: {}
+        },
+        initialValue: {
+            $set: value
         }
     });
 
 }
 
 export function reset(state, action) {
-    // TODO
+    return update(state, {
+        value: {
+            $set: state.initialValue
+        },
+        meta: {
+            $set: {}
+        }
+    });
 }
 
 export function touchAll(state) {

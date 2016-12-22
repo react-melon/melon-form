@@ -36,13 +36,10 @@ export default (() => {
 
         let model = props.model;
 
-        function initialize(value) {
+        function initialize() {
             return {
                 type: types.INITIALIZE,
-                payload: {
-                    value,
-                    model
-                }
+                payload: {model}
             };
         }
 

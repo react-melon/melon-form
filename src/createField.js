@@ -86,24 +86,33 @@ export default function createField(Field = DefaultField) {
      */
     class FormField extends Component {
 
-        shouldComponentUpdate(nextProps) {
-            return !shallowEqual(nextProps, this.props);
+        shouldComponentUpdate(nextProps, nextState, nextContext) {
+            return !shallowEqual(nextProps, this.props)
+                || !shallowEqual(this.context, nextContext);
         }
 
         componentWillMount() {
             this.context.actions.register(this.props.name);
         }
 
-        componentWillUnmount() {
-            this.context.actions.unregister(this.props.name);
+        componentWillReceiveProps(nextProps, nextContext) {
+
+            if (
+                this.props.name === nextProps.name
+                && nextContext.model === this.context.model
+            ) {
+                return;
+            }
+
+            const {unregister, register} = nextContext.actions;
+
+            unregister(name);
+            register(name);
+
         }
 
-        componentWillReceiveProps(nextProps) {
-            if (this.props.name !== nextProps.name) {
-                const actions = this.context.actions;
-                actions.unregister(name);
-                actions.register(name);
-            }
+        componentWillUnmount() {
+            this.context.actions.unregister(this.props.name);
         }
 
         render() {

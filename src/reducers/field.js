@@ -15,7 +15,12 @@ export function focus(state, action) {
     return update(state, {
         meta: {
             [name]: {
-                focus: {$set: true}
+                $apply(meta = DEFAULT_META) {
+                    return {
+                        ...meta,
+                        focus: true
+                    };
+                }
             }
         }
     });
@@ -29,7 +34,12 @@ export function blur(state, action) {
     return update(state, {
         meta: {
             [name]: {
-                focus: {$set: false}
+                $apply(meta = DEFAULT_META) {
+                    return {
+                        ...meta,
+                        focus: false
+                    };
+                }
             }
         }
     });
@@ -44,7 +54,7 @@ export function touch(state, action) {
         meta: {
             $apply(meta) {
                 return setInWithPath(
-                    meta,
+                    meta || DEFAULT_META,
                     name,
                     data => ({
                         ...data,
@@ -74,7 +84,7 @@ export function change(state, action) {
         meta: {
             $apply(meta) {
                 return setInWithPath(
-                    meta,
+                    meta || DEFAULT_META,
                     name,
                     data => ({
                         ...data,
@@ -98,17 +108,18 @@ export function updateValidity(state, action) {
         meta: {
             $apply(meta) {
                 return Object
-                    .keys(meta)
+                    .keys(validity)
                     .reduce((nextMeta, key) => {
 
                         nextMeta[key] = {
+                            ...DEFAULT_META,
                             ...meta[key],
                             error: validity && validity[key] || ''
                         };
 
                         return nextMeta;
 
-                    }, {});
+                    }, meta);
             }
         }
     });
@@ -151,6 +162,7 @@ export function setValidateStart(state, action) {
                     .reduce((nextMeta, key) => {
 
                         nextMeta[key] = {
+                            ...DEFAULT_META,
                             ...meta[key],
 
                             // 不指定 name 或者等于指定 name
@@ -180,7 +192,7 @@ export function setValidateSucceed(state, action) {
         ? update(state, {
             meta: {
                 [name]: {
-                    $apply(meta) {
+                    $apply(meta = DEFAULT_META) {
                         return {
                             ...meta,
                             validating: false,
@@ -199,6 +211,7 @@ export function setValidateSucceed(state, action) {
                         .reduce((nextMeta, key) => {
 
                             nextMeta[key] = {
+                                ...DEFAULT_META,
                                 ...meta[key],
                                 validating: false,
                                 error: null
@@ -221,7 +234,7 @@ export function setValidateFailed(state, action) {
         ? update(state, {
             meta: {
                 [name]: {
-                    $apply(meta) {
+                    $apply(meta = DEFAULT_META) {
                         return {
                             ...meta,
                             validating: false,
@@ -240,6 +253,7 @@ export function setValidateFailed(state, action) {
                         .reduce((nextMeta, key) => {
 
                             nextMeta[key] = {
+                                ...DEFAULT_META,
                                 ...meta[key],
                                 validating: false,
                                 error
@@ -259,7 +273,12 @@ export function startPending(state, action) {
     return update(state, {
         meta: {
             [action.payload.name]: {
-                $merge: {pending: true}
+                $apply(meta = DEFAULT_META) {
+                    return {
+                        ...meta,
+                        pending: true
+                    };
+                }
             }
         }
     });
@@ -269,7 +288,12 @@ export function stopPending(state, action) {
     return update(state, {
         meta: {
             [action.payload.name]: {
-                $merge: {pending: false}
+                $apply(meta = DEFAULT_META) {
+                    return {
+                        ...meta,
+                        pending: false
+                    };
+                }
             }
         }
     });

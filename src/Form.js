@@ -30,6 +30,11 @@ export default class Form extends Component {
         };
     }
 
+    componentWillMount() {
+        // 生成 initial value
+        this.actions.actions.initialize();
+    }
+
     componentWillReceiveProps(nextProps) {
 
         if (this.props === nextProps) {
