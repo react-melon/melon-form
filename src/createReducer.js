@@ -27,7 +27,8 @@ const MAP = {
     [actionTypes.REGISTER]: reducers.register,
     [actionTypes.UNREGISTER]: reducers.unregister,
     [actionTypes.PENDING_START]: reducers.startPending,
-    [actionTypes.PENDING_STOP]: reducers.stopPending
+    [actionTypes.PENDING_STOP]: reducers.stopPending,
+    [actionTypes.FILL_META]: reducers.fillMeta
 };
 
 export default function createReducer(model, initialValue = {}, customReducers = {}) {

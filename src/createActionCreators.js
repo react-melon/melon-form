@@ -299,6 +299,16 @@ export default (() => {
             };
         }
 
+        function fillMeta(name, meta) {
+            return {
+                type: types.FILL_META,
+                payload: {
+                    name,
+                    meta
+                }
+            };
+        }
+
         memoizedActions = {
 
             // form
@@ -306,6 +316,7 @@ export default (() => {
             submit,
             reset,
             touchAll,
+            fillMeta,
 
             // form & field
             validate,

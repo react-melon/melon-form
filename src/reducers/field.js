@@ -298,3 +298,25 @@ export function stopPending(state, action) {
         }
     });
 }
+
+export function fillMeta(state, action) {
+
+    let {
+        name,
+        meta
+    } = action.payload;
+
+    return update(state, {
+        meta: {
+            [name]: {
+                $apply(target = DEFAULT_META) {
+                    return {
+                        ...target,
+                        ...meta
+                    };
+                }
+            }
+        }
+    });
+
+}

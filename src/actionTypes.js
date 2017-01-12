@@ -14,6 +14,8 @@ export const TOUCH = `${PREFIX}/TOUCH`;
 export const TOUCH_ALL = `${PREFIX}/TOUCH_ALL`;
 export const BLUR = `${PREFIX}/BLUR`;
 
+export const FILL_META = `${PREFIX}/FILL_META`;
+
 export const ARRAY_SWAP = `${PREFIX}/ARRAY_SWAP`;
 export const ARRAY_PUSH = `${PREFIX}/ARRAY_PUSH`;
 export const ARRAY_POP = `${PREFIX}/ARRAY_POP`;
