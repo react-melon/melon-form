@@ -304,7 +304,8 @@ export default (() => {
                 type: types.FILL_META,
                 payload: {
                     name,
-                    meta
+                    meta,
+                    model
                 }
             };
         }
