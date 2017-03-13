@@ -6,7 +6,8 @@
 
 import {
     deleteIn,
-    compilePath
+    compilePath,
+    walk
 } from '../../../src/util/dataPath';
 
 describe('util/dataPath', () => {
@@ -59,6 +60,34 @@ describe('util/dataPath', () => {
 
     it('compilePath', () => {
         expect(compilePath(['books', '1', 'author'])).toBe('books[1].author');
+    });
+
+    it('walk', () => {
+
+        let spy = jasmine.createSpy();
+
+        walk(null, spy);
+
+        expect(spy).not.toHaveBeenCalled();
+
+        let spy2 = jasmine.createSpy();
+
+        walk([1], spy2);
+
+        expect(spy2).toHaveBeenCalledTimes(1);
+
+        let spy3 = jasmine.createSpy();
+
+        walk([null], spy3);
+
+        expect(spy3).toHaveBeenCalledTimes(1);
+
+        let spy4 = jasmine.createSpy();
+
+        walk({name: void 0}, spy4);
+
+        expect(spy4).toHaveBeenCalledTimes(1);
+
     });
 
 });

@@ -3,22 +3,50 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import {walk} from './dataPath';
+import {walk, compilePath} from './dataPath';
 import startsWith from 'lodash/startsWith';
 import toPath from 'lodash/toPath';
-import {compilePath} from './dataPath';
+import mapValues from 'lodash/mapValues';
+import {DEFAULT_META} from '../constants';
 
-export function make(obj, prefix = '') {
+/**
+ * 生成 meta 对象
+ *
+ * @param  {Object|Array} target         目标对象
+ * @param  {string}       [prefix='']    生成的 meta 对象的 key 值前缀
+ * @param  {number}       [startIndex=0] 若 target 是一个数组，那么还可以额外指定 key 值的起始下标；
+ *                                       但只对第一层级起效
+ * @return {Object}
+ */
+export function make(target, prefix = '', startIndex = 0) {
 
     const map = {};
 
-    walk(obj, (dataPath, value, isArray) => {
+    let isRootArray = Array.isArray(target);
 
-        if (isArray) {
-            dataPath = `${prefix}${dataPath}`;
+    walk(target, (dataPath, value, isArray, tokens) => {
+
+        if (isRootArray) {
+
+            // 只对第一层进行处理
+            if (startIndex) {
+
+                let firstToken = tokens[0];
+                let numbericFirstToken = parseInt(firstToken, 10);
+
+                if (!isNaN(numbericFirstToken)) {
+                    dataPath = compilePath([
+                        numbericFirstToken + startIndex,
+                        ...tokens.slice(1)
+                    ]);
+                }
+
+            }
+
         }
-        else if (prefix) {
-            dataPath = `${prefix}.${dataPath}`;
+
+        if (prefix) {
+            dataPath = `${prefix}${isRootArray ? '' : '.'}${dataPath}`;
         }
 
         map[dataPath] = value;
@@ -64,20 +92,6 @@ export function move(map, from, to) {
 
 }
 
-function add(map, prefix, ...nodes) {
-
-    return nodes
-        .reduce((map, node) => {
-
-            return {
-                ...map,
-                ...make(node, prefix)
-            };
-
-        }, map);
-
-}
-
 export function splice(
     map, pointer,
     arr, start, deleteCount, replacements
@@ -112,9 +126,13 @@ export function splice(
 
 
     // 添加
-    for (let i = 0, len = replacements.length; i < len; i++) {
-        map = add(map, `${pointer}[${start + i}]`, replacements[i]);
-    }
+    map = {
+        ...map,
+        ...mapValues(
+            make(replacements, pointer, start),
+            () => DEFAULT_META
+        )
+    };
 
     return map;
 

@@ -110,32 +110,37 @@ export function compilePath(tokens) {
 
 }
 
-export function walk(obj, iterator) {
+export function walk(target, iterator) {
+
+    if (typeof target !== 'object' || !target) {
+        return;
+    }
 
     const tokens = [];
 
-    function next(cur) {
+    function next(current) {
 
-        let isCurrentArray = Array.isArray(cur);
+        let isCurrentArray = Array.isArray(current);
 
-        Object.keys(cur).forEach(key => {
+        Object.keys(current).forEach(key => {
 
-            const value = cur[key];
+            const value = current[key];
 
             tokens.push(key);
 
-            if (typeof value === 'object') {
+            if (typeof value === 'object' && value) {
                 next(value, iterator);
             }
             else {
-                iterator(compilePath(tokens), value, isCurrentArray);
+                iterator(compilePath(tokens), value, isCurrentArray, tokens);
             }
 
             tokens.pop();
 
         });
+
     }
 
-    next(obj);
+    next(target);
 
 }

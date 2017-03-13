@@ -69,7 +69,6 @@ export function arrayPush(state, action) {
     } = state;
 
     let currentValue = getIn(value, name) || [];
-    let currentLength = currentValue.length;
     let nextValue = setIn(
         value,
         name,
@@ -81,20 +80,17 @@ export function arrayPush(state, action) {
             $set: nextValue
         },
         meta: {
-            $set: elements.reduce((meta, element, i) => {
-
-                return {
-                    ...meta,
-                    ...mapValues(
-                        make(
-                            element,
-                            `${name}[${currentLength + i}]`
-                        ),
-                        () => DEFAULT_META
-                    )
-                };
-
-            }, meta)
+            $set: {
+                ...meta,
+                ...mapValues(
+                    make(
+                        elements,
+                        name,
+                        currentValue.length
+                    ),
+                    () => DEFAULT_META
+                )
+            }
         }
     });
 
@@ -213,8 +209,9 @@ export function arraySplice(state, action) {
         },
         meta: {
             $set: splice(
-                meta, name,
-                currentValue, start, deleteCount, replacements
+                meta,
+                name,
+                currentValue, start, deleteCount, replacements, DEFAULT_META
             )
         }
     });

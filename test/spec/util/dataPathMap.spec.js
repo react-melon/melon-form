@@ -6,8 +6,87 @@
 import {
     setInWithPath,
     splice,
-    swap
+    swap,
+    make
 } from '../../../src/util/dataPathMap';
+
+import {DEFAULT_META} from '../../../src/constants';
+
+describe('util.dataPathMap.make', () => {
+
+    it('invalid', () => {
+
+        expect(make()).toEqual({});
+        expect(make(null)).toEqual({});
+
+    });
+
+    it('array', () => {
+
+        expect(make([])).toEqual({});
+
+        expect(make([1, 2, 3])).toEqual({
+            '[0]': 1,
+            '[1]': 2,
+            '[2]': 3
+        });
+
+        expect(make([1, 2, 3], 'test')).toEqual({
+            'test[0]': 1,
+            'test[1]': 2,
+            'test[2]': 3
+        });
+
+        expect(make([1, 2, 3], 'test', 3)).toEqual({
+            'test[3]': 1,
+            'test[4]': 2,
+            'test[5]': 3
+        });
+
+        expect(make([[1], [2], [3]], '', 3)).toEqual({
+            '[3][0]': 1,
+            '[4][0]': 2,
+            '[5][0]': 3
+        });
+
+    });
+
+    it('object', () => {
+
+        expect(make({})).toEqual({});
+
+        expect(make({a: 1, b: {c: 1}})).toEqual({
+            'a': 1,
+            'b.c': 1
+        });
+
+    });
+
+    it('mixed', () => {
+
+        expect(make({
+            friends: [
+                {
+                    name: 'leon',
+                    age: 18
+                },
+                {
+                    name: 'tom',
+                    age: 19
+                }
+            ],
+            name: 'test'
+        })).toEqual({
+            'name': 'test',
+            'friends[0].name': 'leon',
+            'friends[0].age': 18,
+            'friends[1].name': 'tom',
+            'friends[1].age': 19
+        });
+
+    });
+
+});
 
 describe('dataPathMap', () => {
 
@@ -146,7 +225,8 @@ describe('dataPathMap', () => {
             arr, 0, 0, [{name: 'little flower'}]
         );
 
-        expect(map2['.users[0].name']).toBe('little flower');
+        // 新增的 meta 值应该为 DEFAULT_META
+        expect(map2['.users[0].name']).toBe(DEFAULT_META);
         expect(map2['.users[1].name']).toBe('ludafa');
         expect(map2['.users[2].name']).toBe('metooq');
 
@@ -157,7 +237,9 @@ describe('dataPathMap', () => {
 
         expect(map3['.users[0].name']).toBe('ludafa');
         expect(map3['.users[1].name']).toBe('metooq');
-        expect(map3['.users[4].name']).toBe('little flower');
+
+        // 新增的 meta 值应该为 DEFAULT_META
+        expect(map3['.users[4].name']).toBe(DEFAULT_META);
 
         let map4 = splice(
             map, '.users[0].books',
@@ -165,7 +247,10 @@ describe('dataPathMap', () => {
         );
 
         expect(map4['.users[0].name']).toBe('ludafa');
-        expect(map4['.users[0].books[0].name']).toBe('test cook book');
+
+        // 新增的 meta 值应该为 DEFAULT_META
+        expect(map4['.users[0].books[0].name']).toBe(DEFAULT_META);
+
         expect(map4['.users[0].books[1].name']).toBe('ludafa\'s super cook book');
 
     });

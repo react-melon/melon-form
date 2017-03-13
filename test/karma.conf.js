@@ -10,8 +10,7 @@ module.exports = {
     basePath: path.join(__dirname, '../'),
 
     frameworks: [
-        'jasmine',
-        'jasmine-expect-jsx'
+        'jasmine'
     ],
 
     files: [
