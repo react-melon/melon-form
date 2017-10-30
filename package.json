@@ -62,9 +62,8 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.8.0",
     "nib": "^1.1.2",
-    "react": "^15.4.1",
-    "react-addons-test-utils": "^15.4.1",
-    "react-dom": "^15.4.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
@@ -81,7 +80,7 @@
     "url": "git+https://github.com/react-melon/melon-form.git"
   },
   "peerDependencies": {
-    "react": "^0.14.8||^15.4.0"
+    "react": "^15.6.2||^16.0.0"
   },
   "keywords": [
     "react",
@@ -96,7 +95,6 @@
   "homepage": "https://github.com/react-melon/melon-form#readme",
   "dependencies": {
     "lodash": "^4.17.2",
-    "react": "^0.14.8||^15.4.0",
     "react-addons-update": "^15.4.1",
     "redux-thunk": "^2.1.0",
     "shallow-equal": "^1.0.0"
