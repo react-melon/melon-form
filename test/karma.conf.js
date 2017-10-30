@@ -14,7 +14,7 @@ module.exports = {
     ],
 
     files: [
-        'test/spec/**/*.spec.js'
+        'test/index.js'
     ],
 
     browsers: [

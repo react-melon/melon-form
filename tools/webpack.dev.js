@@ -9,7 +9,6 @@ const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const config = {
 
@@ -75,7 +74,6 @@ const config = {
             filename: path.resolve(__dirname, '../asset/index.html'),
             alwaysWriteToDisk: true
         }),
-        new HtmlWebpackHarddiskPlugin(),
         new webpack.IgnorePlugin(/regenerator|nodent|js\-beautify/, /ajv/),
         new webpack.IgnorePlugin(/locale/, /moment/)
     ]
