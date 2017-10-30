@@ -15,3 +15,12 @@ _book
 docs
 example
 tools
+.babelrc
+.editorconfig
+.fecsignore
+.fecsrc
+.npmignore
+.travis.yml
+book.json
+bower.json
+esdoc.json
