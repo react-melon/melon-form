@@ -8,6 +8,8 @@ import toPath from 'lodash/toPath';
 
 export const getIn = get;
 
+export const parse = toPath;
+
 function setInWithPath(state, value, first, ...paths) {
 
     if (first === void 0) {
